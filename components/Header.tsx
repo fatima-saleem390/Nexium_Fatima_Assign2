@@ -15,7 +15,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="w-full bg-gray-100 border-b shadow-sm">
+    <header className="w-full bg-blue-950 text-blue-100 border-b shadow-sm">
       <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
         <h1 className="text-xl font-bold">Blog Summariser</h1>
         <nav className="flex space-x-4">
@@ -23,8 +23,8 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center px-2 py-1 rounded hover:text-blue-600 ${
-                pathname === item.href ? 'text-blue-600 font-semibold' : 'text-gray-800'
+              className={`flex items-center px-2 py-1 rounded hover:text-blue-400 ${
+                pathname === item.href ? 'text-blue-400 font-semibold' : 'text-blue-100'
               }`}
             >
               {item.icon}

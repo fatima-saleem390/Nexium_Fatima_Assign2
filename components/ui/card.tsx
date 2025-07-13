@@ -6,7 +6,7 @@ interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 export const Card: React.FC<CardProps> = ({ children, ...props }) => {
   return (
     <div
-      className="border border-gray-200 rounded-lg shadow-md p-4 bg-white"
+      className="border border-gray-200 rounded-xl shadow-md p-6 bg-white"
       {...props}
     >
       {children}
@@ -15,5 +15,9 @@ export const Card: React.FC<CardProps> = ({ children, ...props }) => {
 };
 
 export const CardContent: React.FC<CardContentProps> = ({ children, ...props }) => {
-  return <div className="mt-2" {...props}>{children}</div>;
+  return (
+    <div className="space-y-6" {...props}>
+      {children}
+    </div>
+  );
 };

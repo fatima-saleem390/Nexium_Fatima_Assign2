@@ -2,6 +2,7 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import { urduDictionary } from '../../../lib/dictionary';
 
+// ✅ ONLY export POST — helpers stay private
 export async function POST(req) {
   try {
     const { url } = await req.json();
@@ -21,8 +22,8 @@ export async function POST(req) {
   }
 }
 
-// ✅ Scrape blog HTML and extract paragraphs as a single paragraph
-export async function scrapeBlog(url) {
+// ✅ helpers are NOT exported
+async function scrapeBlog(url) {
   const { data } = await axios.get(url);
   const $ = load(data);
 
@@ -32,18 +33,16 @@ export async function scrapeBlog(url) {
     if (text.length > 30) paragraphs.push(text);
   });
 
-  return paragraphs.join(' '); // 🔑 Single paragraph
+  return paragraphs.join(' ');
 }
 
-// ✅ Shorten to ~10–12 sentences as one block
-export function summariseText(text) {
+function summariseText(text) {
   const sentences = text.split('.').map(s => s.trim()).filter(Boolean);
   const limited = sentences.slice(0, 12).join('. ');
   return limited + (limited.endsWith('.') ? '' : '.');
 }
 
-// ✅ Translate to Urdu using simple dictionary
-export function translateToUrdu(text) {
+function translateToUrdu(text) {
   let translated = text;
   for (const [eng, urdu] of Object.entries(urduDictionary)) {
     const regex = new RegExp(`\\b${eng}\\b`, 'gi');

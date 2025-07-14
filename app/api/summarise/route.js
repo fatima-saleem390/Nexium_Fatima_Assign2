@@ -1,22 +1,53 @@
-import { NextResponse } from 'next/server';
-import { scrapeBlog, summariseText, translateToUrdu } from '@/lib/scraper';
-import { connectMongo, Blog } from '@/lib/db';
-import { supabase } from '@/lib/supabase';
+import axios from 'axios';
+import { load } from 'cheerio';
+import { urduDictionary } from '../../../lib/dictionary';
 
 export async function POST(req) {
-  const { url } = await req.json();
+  try {
+    const { url } = await req.json();
 
-  // Scrape and summarise
-  const fullText = await scrapeBlog(url);
-  const summary = summariseText(fullText);
-  const urdu = translateToUrdu(summary);
+    if (!url) {
+      return new Response(JSON.stringify({ error: 'No URL provided.' }), { status: 400 });
+    }
 
-  // Save full text in Mongo
-  await connectMongo();
-  await Blog.create({ url, fullText });
+    const fullText = await scrapeBlog(url);
+    const summary = summariseText(fullText);
+    const urdu = translateToUrdu(summary);
 
-  // Save summary in Supabase
-  await supabase.from('summaries').insert([{ url, summary }]);
+    return new Response(JSON.stringify({ summary, urdu }), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: 'Something went wrong.' }), { status: 500 });
+  }
+}
 
-  return NextResponse.json({ summary, urdu });
+// ✅ Scrape blog HTML and extract paragraphs as a single paragraph
+export async function scrapeBlog(url) {
+  const { data } = await axios.get(url);
+  const $ = load(data);
+
+  const paragraphs = [];
+  $('p').each((i, el) => {
+    const text = $(el).text().trim();
+    if (text.length > 30) paragraphs.push(text);
+  });
+
+  return paragraphs.join(' '); // 🔑 Single paragraph
+}
+
+// ✅ Shorten to ~10–12 sentences as one block
+export function summariseText(text) {
+  const sentences = text.split('.').map(s => s.trim()).filter(Boolean);
+  const limited = sentences.slice(0, 12).join('. ');
+  return limited + (limited.endsWith('.') ? '' : '.');
+}
+
+// ✅ Translate to Urdu using simple dictionary
+export function translateToUrdu(text) {
+  let translated = text;
+  for (const [eng, urdu] of Object.entries(urduDictionary)) {
+    const regex = new RegExp(`\\b${eng}\\b`, 'gi');
+    translated = translated.replace(regex, urdu);
+  }
+  return translated;
 }

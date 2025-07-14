@@ -116,7 +116,7 @@ export default function Home() {
             <hr className="my-6 border-gray-300" />
 
             <h2 className="text-xl font-bold text-blue-950 mb-2 flex justify-between items-center">
-              Urdu Summary
+              Urdu Translation
               <Button
                 className="ml-4 text-sm px-3 py-1 bg-white hover:bg-gray-200 text-black"
                 onClick={() => copyToClipboard(urdu, 'Urdu summary')}

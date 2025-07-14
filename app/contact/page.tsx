@@ -15,7 +15,7 @@ export default function ContactPage() {
           <h2 className="text-xl font-semibold mb-4 text-blue-950">Our Details</h2>
           <div className="flex items-center mb-3 text-blue-950">
             <Mail className="w-5 h-5 mr-2 text-blue-300" />
-            <span>hello@example.com</span>
+            <span>blogSummerizer@hotmail.com</span>
           </div>
           <div className="flex items-center mb-3 text-blue-950">
             <Phone className="w-5 h-5 mr-2 text-blue-300" />

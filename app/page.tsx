@@ -34,7 +34,7 @@ export default function Home() {
       if (res.ok) {
         setSummary(data.summary);
         setUrdu(data.urdu);
-        toast.success('Summary generated successfully!');
+        
       } else {
         toast.error(data.error || 'Failed to summarise. Try a different URL.');
       }
@@ -65,7 +65,7 @@ export default function Home() {
           placeholder="https://example.com/blog"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="flex-1 shadow-sm border border-gray-300"
+          className="flex-1 shadow-sm border border-gray-300 h-12 text-lg px-4"
           disabled={loading}
         />
         <Button
